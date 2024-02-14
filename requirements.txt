@@ -1,0 +1,6 @@
+python requirements:
+	scapy
+	cryptography
+
+Windows requirements:
+	Npcap

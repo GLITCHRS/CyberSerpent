@@ -1,8 +1,3 @@
 {
-	"Mac Spoofer":
-	{
-		"Category": "Impersonation",
-		"Path": ["modules/impersonation/mac/"],
-		"Tags": ["Network manipulation", "Deception and impersonation", "Intrusive"]
-	}
+	"Mac Spoofer": "modules.impersonation.mac.Shell"
 }
