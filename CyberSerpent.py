@@ -1,4 +1,4 @@
-from CSEngine import CSEngine
+from modules.CSEngine import CSEngine
 
 
 def main():

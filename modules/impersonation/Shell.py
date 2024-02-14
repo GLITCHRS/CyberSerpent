@@ -52,7 +52,7 @@ class Shell:
 	@staticmethod
 	def exit():
 		"""goes back to the main shell"""
-		return "Shell"
+		return "modules.Shell"
 
 prefix = "CyberSerpent(Impersonation)>"
 shell_prompts = shell_prompts = DynamicShellPrompts(Shell)

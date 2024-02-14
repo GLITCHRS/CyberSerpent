@@ -4,7 +4,7 @@ from inspect import signature, Parameter
 
 class CSEngine:
 
-	current_shell_module = import_module("Shell")
+	current_shell_module = import_module("modules.Shell")
 	current_prompts = current_shell_module.shell_prompts
 
 	def __init__(self):

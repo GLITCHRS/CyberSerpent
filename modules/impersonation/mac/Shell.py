@@ -1,5 +1,5 @@
 from importlib import import_module
-from os import listdir
+from os import listdir, system, name
 from collections import defaultdict
 from json import load
 
@@ -81,7 +81,7 @@ class Shell:
 		"""displays info about the current selected script, if used with a script (info <script name/num>) it displays info about that script"""
 		if script is None:
 			if Shell.current_script is None:
-				print("Please select a script to display by either using the (use) command or by providing a script like (info <script name/num)")
+				print("Please select a script to display by either using the (use) command or by providing a script like (info <script name/num>)")
 			else:
 				print(f"{Shell.current_script_name}: {Shell.current_script.Spoofer.__doc__}")
 		else:
@@ -112,5 +112,5 @@ class Shell:
 		"""goes back to the previous shell"""
 		return "modules.impersonation.Shell"
 
-prefix = "CyberSerpent(Impersonation/Mac Spoofer)>"
+prefix = "CyberSerpent(Impersonation/Mac-Spoofer)>"
 shell_prompts = DynamicShellPrompts(Shell)

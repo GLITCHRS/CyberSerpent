@@ -8,7 +8,7 @@ from modules.DynamicShellPrompts import DynamicShellPrompts
 
 class Shell:
 
-	with open("modules.json") as file:
+	with open("modules//modules.json") as file:
 		_modules = defaultdict(lambda: None, load(file))
 
 	@staticmethod
