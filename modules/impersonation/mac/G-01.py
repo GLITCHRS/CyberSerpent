@@ -2,7 +2,7 @@ from os import name, system
 from string import hexdigits
 from re import findall, compile as regex_compile
 from random import choice, sample
-from subprocess import check_output, STDOUT
+from subprocess import check_output
 from pdb import set_trace
 
 
@@ -31,19 +31,17 @@ Supported Platforms: Windows
 	# UAA stands for (Universally Administrated Addresses)
 
 	def enable_interface_windows(self, interface_reg):
-		enabling_interface_result = check_output(f"wmic path win32_networkadapter where index={interface_reg} call enable")
-		return enabling_interface_result
+		check_output(f"wmic path win32_networkadapter where index={interface_reg} call enable")
 
 	def disable_interface_windows(self, interface_reg):
-		disabling_interface_result = check_output(f"wmic path win32_networkadapter where index={interface_reg} call disable")
-		return disabling_interface_result
+		check_output(f"wmic path win32_networkadapter where index={interface_reg} call disable")
 
 	def get_random_mac_address_windows(self):
 		# uppercase hexdigits (used set() for eliminating duplicates)
 		uppercased_hexdigits = "".join(set(hexdigits.upper()))
 
 		# generating a random MAC with following the LAA rule
-		return f"{choice(uppercased_hexdigits)}{choice("24AE")}{''.join(sample(uppercased_hexdigits, k=10))}"
+		return f"{choice(uppercased_hexdigits)}{choice("26AE")}{''.join(sample(uppercased_hexdigits, k=10))}"
 
 	def get_interfaces_windows(self):
 		mac_regex = regex_compile(r"([A-Z0-9]{2}[:-]){5}([A-Z0-9]{2})")
@@ -119,7 +117,6 @@ Supported Platforms: Windows
 		while True:
 			try:
 				choice = int(input("Please choose the interface you'd like to spoof its MAC by entering it's #N: "))
-
 				return interfaces[choice]
 
 			except:

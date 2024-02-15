@@ -25,7 +25,7 @@ class CSEngine:
 				continue
 
 			_signature = signature(func)
-			default_params = [v.default for v in _signature.parameters.values() if v.default is not Parameter.empty]
+			default_params = [v.default for v in _signature.parameters.values() if v.default != Parameter.empty]
 
 			# if all parameters are provided
 			if func.__code__.co_argcount == len(params):
