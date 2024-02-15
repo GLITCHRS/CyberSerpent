@@ -2,22 +2,23 @@ from os import name, system
 from string import hexdigits
 from re import findall, compile as regex_compile
 from random import choice, sample
-from subprocess import check_output
+from subprocess import check_output, STDOUT
+from pdb import set_trace
 
-from ..ImpersonationModel import Impersonation
 
+class Spoofer:
 
-class Spoofer(Impersonation):
-
-	r"""
-=======================================
+	info = f"""
+{'='*69}
 Author: GLITCH
-	The following command to spoof mac:
-
-			reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002BE10318}\{adapter_key} /v NetworkAddress /t REG_SZ /d 002622D90EFC /f
-
-	To identify the choosen network adapter by user, consider comparing the (Description) from the adapter he chose, with the (DriverDesc) key in registery for that adapter.
+Supported Platforms: Windows
+{'-'*69}
+{'VARIALBE':12}{'DESCRIPTION':23}{'REQUIRED':12}{'NOTE'}
+{'MAC':12}{'The MAC to spoof to':23}{'No':12}{'If not set, will spoof to a random MAC address'}
+{'='*69}
 	"""
+
+	MAC = None
 
 	# MAC addresses are always 12 digit hexadecimal numbers (48 bits)
 	# They consist of six pairs of two hexadecimal digits {0-9, A-F}
@@ -29,22 +30,22 @@ Author: GLITCH
 	# LAA stands for (Locally Administrated Addresses)
 	# UAA stands for (Universally Administrated Addresses)
 
-	def enable_interface_windows(interface_reg):
+	def enable_interface_windows(self, interface_reg):
 		enabling_interface_result = check_output(f"wmic path win32_networkadapter where index={interface_reg} call enable")
-		return enable_interface_windows
+		return enabling_interface_result
 
-	def disable_interface_windows(interface_reg):
+	def disable_interface_windows(self, interface_reg):
 		disabling_interface_result = check_output(f"wmic path win32_networkadapter where index={interface_reg} call disable")
 		return disabling_interface_result
 
-	def get_random_mac_address_windows():
+	def get_random_mac_address_windows(self):
 		# uppercase hexdigits (used set() for eliminating duplicates)
 		uppercased_hexdigits = "".join(set(hexdigits.upper()))
 
 		# generating a random MAC with following the LAA rule
 		return f"{choice(uppercased_hexdigits)}{choice("24AE")}{''.join(sample(uppercased_hexdigits, k=10))}"
 
-	def get_interfaces_windows():
+	def get_interfaces_windows(self):
 		mac_regex = regex_compile(r"([A-Z0-9]{2}[:-]){5}([A-Z0-9]{2})")
 		transport_name_regex = regex_compile("{.+}")
 
@@ -59,11 +60,11 @@ Author: GLITCH
 
 		return interfaces_mac
 
-	def spoof_mac_windows(transport_name, mac):
-		network_interface_reg_path = "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}"
+	def spoof_mac_windows(self, transport_name, mac):
+		network_interface_reg_path = r"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}"
 
 		# using reg QUERY to get available adapters from regsitery
-		output = check_output(f"reg QUERY {network_interface_reg_path.replace("\\\\", "\\")}").decode()
+		output = check_output(f"reg QUERY \"{network_interface_reg_path.replace("\\\\", "\\")}\"").decode()
 
 		# looping through all interfaces from registery
 		for interface in findall(rf"{network_interface_reg_path}\\\d+", output):
@@ -72,23 +73,44 @@ Author: GLITCH
 			interface_reg = int(interface.split("\\")[-1])
 
 			# getting the content of the interface from registery
-			interface_content = check_output(f"reg QUERY {interface_reg.strip()}").decode()
+			interface_content = check_output(f"reg QUERY {interface.strip()}").decode()
 
 			# if transport name is found inside the interface we queried from registery, this is the interface we'd like to spoof its MAC
 			if transport_name in interface_content:
-				mac_spoofing_result = check_output(f"reg ADD {interface} /v NetworkAddress /d {mac} /f").decode()
+				mac_spoofing_result = check_output(f"reg ADD \"{interface}\" /v NetworkAddress /d {mac} /f").decode()
 				print(f"Spoofing Result: {mac_spoofing_result}")
 				return interface_reg
 
-	def clear_mac(mac):
+	def unspoof_mac_windows(self, transport_name):
+		network_interface_reg_path = r"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}"
+
+		# using reg QUERY to get available adapters from regsitery
+		output = check_output(f"reg QUERY \"{network_interface_reg_path.replace("\\\\", "\\")}\"").decode()
+
+		# looping through all interfaces from registery
+		for interface in findall(rf"{network_interface_reg_path}\\\d+", output):
+
+			# finding the interface path from registery
+			interface_reg = int(interface.split("\\")[-1])
+
+			# getting the content of the interface from registery
+			interface_content = check_output(f"reg QUERY {interface.strip()}").decode()
+
+			# if transport name is found inside the interface we queried from registery, this is the interface we'd like to spoof its MAC
+			if transport_name in interface_content:
+				mac_unspoofing_result = check_output(f"reg DELETE {interface} /v NetworkAddress /f").decode()
+				print(f"[CS]UnSpoofing Result: {mac_unspoofing_result}")
+				return interface_reg
+
+	def clear_mac(self, mac):
 		# returns a clear MAC (removing all '-' and ':' or other possible characters)
 		return "".join(c for c in mac if c in hexdigits).upper()
 
-	def select_interface(interfaces):
+	def select_interface(self, interfaces):
 
 		# print available options
 		for index, interface in enumerate(interfaces):
-			print(f"#{index}: {interface[0]}, {interface[1]}")
+			print(f"[CS] #{index}: {interface[0]}, {interface[1]}")
 
 		# if only one adapter exists, choose it automatically
 		if len(interfaces) == 1:
@@ -96,38 +118,43 @@ Author: GLITCH
 
 		while True:
 			try:
-				choice = int(input("Please choose the interface you'd like to spoof its MAC by entering it's #N (e to exit): "))
-
-				if choice == 'e':
-					return
+				choice = int(input("Please choose the interface you'd like to spoof its MAC by entering it's #N: "))
 
 				return interfaces[choice]
 
 			except:
-				print("Not a valid answer!")
+				print("[CS] Not a valid answer!")
 
-	def spoof_windows(self, *args):
+	def spoof_windows(self):
 
 		while True:
-			system("cls")
-			print("="*50)
-			choice = input("you want to spoof it to a random MAC or a specific MAC? (R for random or S for specific): ")[0].upper()
-			print("="*50)
+			choice = input("Would you like to spoof or unspoof ? (e to exit): ").upper()
 
-			if choice in ('R', 'S'):
+			if choice == 'E':
+				return
+
+			elif choice in ("SPOOF", "UNSPOOF"):
 				break
 
-		if choice == 'S':
-			print("="*50)
-			mac = input("Please enter the MAC address you'd like to spoof to: ")
-			print("="*50)
+			print("[CS] Not a valid answer!")
 
-			new_mac = clear_mac(mac)
+		interfaces = self.get_interfaces_windows()
+		old_mac, target_transport_name = self.select_interface(interfaces)
+		print(f"[CS] Old MAC: {old_mac}")
 
+		if choice == "SPOOF":
+			if Spoofer.MAC is None:
+				new_mac = self.get_random_mac_address_windows()
+				interface_reg = self.spoof_mac_windows(target_transport_name, new_mac)
+				print(f"[CS] New MAC: {new_mac}")
+
+			else:
+				new_mac = Spoofer.MAC
 		else:
-			new_mac = get_random_mac_address_windows()
-			interfaces = get_interfaces_windows()
+			interface_reg = self.unspoof_mac_windows(target_transport_name)
+			print("MAC restored")
 
-
-		old_mac, target_transport_name = select_interface(interfaces)
-		# to be continued
+		self.disable_interface_windows(interface_reg)
+		print("[CS] Interface is disabled")
+		self.enable_interface_windows(interface_reg)
+		print("[CS] Interface is enabled")

@@ -74,7 +74,7 @@ class Shell:
 			return
 
 		_shell = Shell.current_script.Spoofer()
-		_shell.spoof()
+		_shell.spoof_windows()
 
 	@staticmethod
 	def info(script=None):
@@ -83,7 +83,7 @@ class Shell:
 			if Shell.current_script is None:
 				print("Please select a script to display by either using the (use) command or by providing a script like (info <script name/num>)")
 			else:
-				print(f"{Shell.current_script_name}: {Shell.current_script.Spoofer.__doc__}")
+				print(f"{Shell.current_script_name}: {Shell.current_script.Spoofer.info}")
 		else:
 			try:
 				script_index = int(script) - 1
@@ -105,7 +105,7 @@ class Shell:
 					print("Script doesn't exist")
 					return
 
-			print(f"{temp_script_name}: {temp_script.Spoofer.__doc__}")
+			print(f"{temp_script_name}: {temp_script.Spoofer.info}")
 
 	@staticmethod
 	def exit():
