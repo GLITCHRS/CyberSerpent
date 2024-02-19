@@ -3,7 +3,6 @@ from string import hexdigits
 from re import findall, compile as regex_compile
 from random import choice, sample
 from subprocess import check_output
-from pdb import set_trace
 
 
 class Spoofer:
@@ -142,11 +141,14 @@ Supported Platforms: Windows
 		if choice == "SPOOF":
 			if Spoofer.MAC is None:
 				new_mac = self.get_random_mac_address_windows()
-				interface_reg = self.spoof_mac_windows(target_transport_name, new_mac)
-				print(f"[CS] New MAC: {new_mac}")
 
 			else:
 				new_mac = Spoofer.MAC
+				# add MAC validation
+
+			interface_reg = self.spoof_mac_windows(target_transport_name, new_mac)
+			print(f"[CS] New MAC: {new_mac}")
+
 		else:
 			interface_reg = self.unspoof_mac_windows(target_transport_name)
 			print("MAC restored")

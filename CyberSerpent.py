@@ -1,18 +1,22 @@
-from ctypes import windll
-from os import name
-
+import ctypes, os
 from modules.CSEngine import CSEngine
 
 
 def main():
 
-	if name == "nt":
-		if windll.shell32.IsUserAnAdmin() == 0:
-			print("[CS] Tool requires admin privilages")
-			return
+	try:
+		is_root = os.getuid() == 0
 
-		engine = CSEngine()
-		engine.run()
+	except:
+		is_root = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+
+	if not is_root:
+		print("[CS] Tool requires root privilages")
+		return
+
+	engine = CSEngine()
+	engine.run()
 
 
 if __name__ == '__main__':
