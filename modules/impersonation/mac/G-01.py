@@ -40,7 +40,7 @@ Supported Platforms: Windows
 		uppercased_hexdigits = "".join(set(hexdigits.upper()))
 
 		# generating a random MAC with following the LAA rule
-		return f"{choice(uppercased_hexdigits)}{choice("26AE")}{''.join(sample(uppercased_hexdigits, k=10))}"
+		return f"{choice(uppercased_hexdigits)}{choice('26AE')}{''.join(sample(uppercased_hexdigits, k=10))}"
 
 	def get_interfaces_windows(self):
 		mac_regex = regex_compile(r"([A-Z0-9]{2}[:-]){5}([A-Z0-9]{2})")
