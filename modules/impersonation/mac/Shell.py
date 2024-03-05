@@ -1,116 +1,92 @@
 from importlib import import_module
-from os import listdir, system, name
+from os import listdir
 from collections import defaultdict
 from json import load
 
+from ...BasicShell import BasicShell
 from ...DynamicShellPrompts import DynamicShellPrompts
 
 
-class Shell:
+class Shell(BasicShell):
 
 	current_script_name = None
 	current_script = None
-	available_scripts = [x.replace(".py", "") for x in listdir("./modules/impersonation/mac") if x not in {"Shell.py", "__pycache__"}]
 	scripts_info = \
 	{
 		"Category": "Impersonation",
 		"Tags": ["Network manipulation", "Deception and impersonation", "Intrusive"]
 	}
 
-	@staticmethod
-	def clear():
-		"""clears the console"""
-		system("cls" if name == "nt" else "clear")
+	def __init__(self):
+		super().__init__()
+		self.shell_prompts = DynamicShellPrompts(Shell)
+		self.prefix = "CyberSerpent(Impersonation/Mac-Spoofer)>"
+		self.modules = [x.replace(".py", "") for x in listdir("./modules/impersonation/mac") if x not in ("Shell.py", "__pycache__")]
+		self.prev_shell_rel_path = "modules.impersonation.Shell"
 
-	@staticmethod
-	def cls():
-		"""clears the console"""
-		system("cls" if name == "nt" else "clear")
-	
-	@staticmethod
-	def help(command=None):
-		"""displays this help message, if used with a command (help <command>) it only displays the help message for that command"""
-		shell_prompts.help(command)
+	@property
+	def available_scripts(self):
+		return self.modules
 
-	@staticmethod
-	def list():
-		"""lists the available scripts to use"""
-		print("="*50)
-		for index,module in enumerate(Shell.available_scripts, 1):
-			print(f"{index}. {module}")
-		print("="*50)
-
-	@staticmethod
-	def use(script):
+	def use(self, script):
 		"""uses the desired script
 	syntax: use <script name/num>"""
 		try:
 			script_index = int(script) - 1
 
-			if script_index > len(Shell.available_scripts):
+			if script_index > len(self.available_scripts):
 				print("Script doesn't exist")
 				return
 
-			Shell.current_script_name = Shell.available_scripts[script_index]
-			Shell.current_script = import_module(f"modules.impersonation.mac.{Shell.current_script_name}")
+			self.current_script_name = self.available_scripts[script_index]
+			self.current_script = import_module(f"modules.impersonation.mac.{self.current_script_name}")
 
 		except:
 			try:
-				Shell.current_script_name = Shell.available_scripts[Shell.available_scripts.index(script)]
-				Shell.current_script = import_module(f"modules.impersonation.mac.{Shell.current_script_name}")
+				self.current_script_name = self.available_scripts[self.available_scripts.index(script)]
+				self.current_script = import_module(f"modules.impersonation.mac.{self.current_script_name}")
 			except:
 				print("Script doesn't exist")
 
-	@staticmethod
-	def script():
+	def script(self):
 		"""displays the current selected script to use"""
-		print(Shell.current_script_name)
+		print(self.current_script_name)
 
-	@staticmethod
-	def run():
+	def run(self):
 		"""runs the current selected script"""
 
-		if Shell.current_script is None:
+		if self.current_script is None:
 			return
 
-		_shell = Shell.current_script.Spoofer()
+		_shell = self.current_script.Spoofer()
 		_shell.spoof_windows()
 
-	@staticmethod
-	def info(script=None):
+	def info(self, script=None):
 		"""displays info about the current selected script, if used with a script (info <script name/num>) it displays info about that script"""
 		if script is None:
-			if Shell.current_script is None:
+			if self.current_script is None:
 				print("Please select a script to display by either using the (use) command or by providing a script like (info <script name/num>)")
 			else:
-				print(f"{Shell.current_script_name}: {Shell.current_script.Spoofer.info}")
+				print(f"{self.current_script_name}: {self.current_script.Spoofer.info}")
 		else:
 			try:
 				script_index = int(script) - 1
 
-				if script_index > len(Shell.available_scripts):
+				if script_index > len(self.available_scripts):
 					print(script_index)
-					print(Shell.available_scripts)
+					print(self.available_scripts)
 					print("Script doesn't exist")
 					return
 
-				temp_script_name = Shell.available_scripts[script_index]
+				temp_script_name = self.available_scripts[script_index]
 				temp_script = import_module(f"modules.impersonation.mac.{temp_script_name}")
 
 			except:
 				try:
-					temp_script_name = Shell.available_scripts[Shell.available_scripts.index(script)]
+					temp_script_name = self.available_scripts[self.available_scripts.index(script)]
 					temp_script = import_module(f"modules.impersonation.mac.{temp_script_name}")
 				except:
 					print("Script doesn't exist")
 					return
 
 			print(f"{temp_script_name}: {temp_script.Spoofer.info}")
-
-	@staticmethod
-	def exit():
-		"""goes back to the previous shell"""
-		return "modules.impersonation.Shell"
-
-prefix = "CyberSerpent(Impersonation/Mac-Spoofer)>"
-shell_prompts = DynamicShellPrompts(Shell)

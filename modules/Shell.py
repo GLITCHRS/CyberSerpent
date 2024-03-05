@@ -1,46 +1,27 @@
-from os import system, name
-from sys import exit as sys_exit
 from collections import defaultdict
 from json import load
 
+from modules.BasicShell import BasicShell
 from modules.DynamicShellPrompts import DynamicShellPrompts
 
 
-class Shell:
+class Shell(BasicShell):
 
-	with open("modules//modules.json") as file:
-		_modules = defaultdict(lambda: None, load(file))
+	def __init__(self):
+		super().__init__()
 
-	@staticmethod
-	def clear():
-		"""clears the console"""
-		system("cls" if name == "nt" else "clear")
+		self.shell_prompts = DynamicShellPrompts(Shell)
+		self.prefix = "CyberSerpent>"
 
-	@staticmethod
-	def cls():
-		"""clears the console"""
-		system("cls" if name == "nt" else "clear")
+		with open("modules//modules.json") as file:
+			self.modules = defaultdict(lambda: None, load(file))
 
-	@staticmethod
-	def help(command=None):
-		"""displays this help message, if used with a command (help <command>) it only displays the help message for that command"""
-		shell_prompts.help(command)
-
-	@staticmethod
-	def list():
-		"""lists the available modules to use"""
-		print("="*50)
-		for index,module in enumerate(Shell._modules, 1):
-			print(f"{index}. {module}")
-		print("="*50)
-
-	@staticmethod
-	def load(shell):
+	def load(self, shell):
 		"""loads the desired module
 	syntax: load <module name/num>"""
 		try:
 			shell_index = int(shell) - 1
-			values = tuple(Shell._modules.values())
+			values = tuple(self.modules.values())
 
 			if shell_index > len(values):
 				return
@@ -49,11 +30,3 @@ class Shell:
 
 		except:
 			return Shell._modules[shell]
-
-	@staticmethod
-	def exit():
-		"""exits the app"""
-		sys_exit(0)
-
-prefix = "CyberSerpent>"
-shell_prompts = DynamicShellPrompts(Shell)
