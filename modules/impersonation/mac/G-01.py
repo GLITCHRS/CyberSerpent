@@ -7,18 +7,6 @@ from subprocess import check_output
 
 class Spoofer:
 
-	info = f"""
-{'='*69}
-Author: GLITCH
-Supported Platforms: Windows
-{'-'*69}
-{'VARIALBE':12}{'DESCRIPTION':23}{'REQUIRED':12}{'NOTE'}
-{'MAC':12}{'The MAC to spoof to':23}{'No':12}{'If not set, will spoof to a random MAC address'}
-{'='*69}
-	"""
-
-	MAC = None
-
 	# MAC addresses are always 12 digit hexadecimal numbers (48 bits)
 	# They consist of six pairs of two hexadecimal digits {0-9, A-F}
 	# Windows uses XX-XX-XX-XX-XX-XX
@@ -28,6 +16,28 @@ Supported Platforms: Windows
 	# follow the rules, setting a custom MAC without using these letters as the second letter could cause conflicts/issues with the network
 	# LAA stands for (Locally Administrated Addresses)
 	# UAA stands for (Universally Administrated Addresses)
+
+	MAC = "00:00:00:00:00:00"
+
+	def get_info(self):
+		return f"""
+{'='*69}
+Author: GLITCH
+Supported Platforms: Windows
+{'-'*69}
+{'VARIALBE':12}{'VALUE':23}{'DESCRIPTION':23}{'REQUIRED':12}{'NOTE'}
+{'MAC':12}{self.MAC:23}{'The MAC to spoof to':23}{'No':12}{'If not set, will spoof to a random MAC address'}
+{'='*69}
+"""
+
+	def __setattr__(self, attrib, value):
+		if attrib != "MAC":
+			raise ValueError
+
+		else:
+			# validate MAC first (later)
+			Spoofer.MAC = value 
+
 
 	def enable_interface_windows(self, interface_reg):
 		check_output(f"wmic path win32_networkadapter where index={interface_reg} call enable")
