@@ -401,5 +401,7 @@ FodyWeavers.xsd
 # GLITCH
 ##############
 
+*.sln
+*.vcx*
 bin/
 bin-int/
