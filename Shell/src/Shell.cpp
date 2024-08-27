@@ -3,7 +3,13 @@
 
 #include <iostream>
 
- void CS::Shell::help()
+CS::Shell::Shell()
+{
+    m_Commands.emplace("exit", &CS::Shell::exit);
+    m_Commands.emplace("clear", &CS::Shell::clear);
+}
+
+void CS::Shell::help()
 {
 }
 
@@ -21,8 +27,6 @@
  void CS::Shell::back()
 {
 }
-
-class exception_exit : std::exception {};
 
  void CS::Shell::exit()
 {

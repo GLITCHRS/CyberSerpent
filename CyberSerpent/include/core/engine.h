@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+
 #include "utils/root_check.h"
 #include "Shell.h"
 
@@ -22,16 +23,34 @@ namespace CS
 				else
 					std::cout << ":(\n";
 
-				std::cin.get();
-				CS::Shell::Get().clear();
-			}
+				std::string command;
+				while (true)
+				{
+					std::cin >> command;
 
+					if (m_Shell.m_Commands.contains(command))
+					{
+						try
+						{
+							(m_Shell.*m_Shell.m_Commands[command])();
+						}
+						catch (exception_exit&)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
 		public:
 			static Engine& Get()
 			{
 				static Engine s_Instance{};
 				return s_Instance;
 			}
+
+		private:
+			CS::Shell& m_Shell{ CS::Shell::Get() };
 		};
 	}
 }

@@ -10,12 +10,20 @@
 #define DLL __attribute__((visibility("default")))
 #endif
 
+#include <map>
+#include <string>
+#include <functional>
+
+
+class exception_exit : std::exception {};
+
+
 namespace CS
 {
 	class DLL Shell
 	{
 	public:
-		Shell() = default;
+		Shell();
 		Shell(Shell&) = delete;
 
 	public:
@@ -36,5 +44,8 @@ namespace CS
 			static Shell instance{};
 			return instance;
 		}
+
+	public:
+		std::map<std::string, void(CS::Shell::*)()> m_Commands;
 	};
 }
