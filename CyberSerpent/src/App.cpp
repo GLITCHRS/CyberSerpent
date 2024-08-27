@@ -6,8 +6,6 @@
 
 int main()
 {
-	CS::Engine& engine{ CS::Engine::Get() };
+	CS::CORE::Engine& engine{ CS::CORE::Engine::Get() };
 	engine.Run();
-
-	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 }

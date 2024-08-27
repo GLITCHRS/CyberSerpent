@@ -8,29 +8,33 @@
 
 namespace CS
 {
-#ifdef _WIN32
-	bool IsRoot()
+	namespace UTILS
 	{
-		BOOL isMember;
-		PSID administratorsGroup = nullptr;
-		SID_IDENTIFIER_AUTHORITY SIDAuthNT = SECURITY_NT_AUTHORITY;
 
-		if (AllocateAndInitializeSid(&SIDAuthNT, 2, SECURITY_BUILTIN_DOMAIN_RID,
-			DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administratorsGroup))
+#ifdef _WIN32
+		bool IsRoot()
 		{
-			if (CheckTokenMembership(nullptr, administratorsGroup, &isMember))
+			BOOL isMember;
+			PSID administratorsGroup = nullptr;
+			SID_IDENTIFIER_AUTHORITY SIDAuthNT = SECURITY_NT_AUTHORITY;
+
+			if (AllocateAndInitializeSid(&SIDAuthNT, 2, SECURITY_BUILTIN_DOMAIN_RID,
+				DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administratorsGroup))
 			{
+				if (CheckTokenMembership(nullptr, administratorsGroup, &isMember))
+				{
+					FreeSid(administratorsGroup);
+					return isMember != 0;
+				}
 				FreeSid(administratorsGroup);
-				return isMember != 0;
 			}
-			FreeSid(administratorsGroup);
+			return false;
 		}
-		return false;
-	}
 #else
-	bool IsRoot()
-	{
-		return getuid() == 0;
-	}
+		bool IsRoot()
+		{
+			return getuid() == 0;
+		}
 #endif
+	}
 }

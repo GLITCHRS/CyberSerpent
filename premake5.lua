@@ -26,6 +26,52 @@ project "CyberSerpent"
 
 	includedirs
 	{
+		"%{prj.name}/include",
+		"Shell/include"
+	}
+
+	links { "Shell" }
+
+	filter "system:windows"
+		cppdialect "C++20"
+		staticruntime "On"
+		systemversion "latest"
+
+		postbuildcommands
+		{
+			"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.dll ../bin/" .. outputdir .. "/%{prj.name}",
+			"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.lib ../bin/" .. outputdir .. "/%{prj.name}"
+		} 
+
+	filter "configurations:Debug"
+		defines "CS_DEBUG"
+		symbols "On"
+
+	filter "configurations:Release"
+		defines "CS_RELEASE"
+		optimize "On"
+
+	filter "configurations:Dist"
+		defines "CS_DIST"
+		optimize "On"
+
+project "Shell"
+	location "Shell"
+	kind "SharedLib"
+	language "C++"
+	defines {"DLLExport"}
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/include/**.h"
+	}
+
+	includedirs
+	{
 		"%{prj.name}/include"
 	}
 

@@ -1,29 +1,37 @@
 #pragma once
 
+#include <iostream>
 #include "utils/root_check.h"
+#include "Shell.h"
 
 namespace CS
 {
-	class Engine
+	namespace CORE
 	{
-	public:
-		Engine() = default;
-		Engine(Engine&) = delete;
-
-	public:
-		void Run() const
+		class Engine
 		{
-			if (CS::IsRoot())
-				std::cout << "ROOT!\n";
-			else
-				std::cout << ":(\n";
-		}
+		public:
+			Engine() = default;
+			Engine(Engine&) = delete;
 
-	public:
-		static Engine& Get()
-		{
-			static Engine s_Instance{};
-			return s_Instance;
-		}
-	};
+		public:
+			void Run() const
+			{
+				if (CS::UTILS::IsRoot())
+					std::cout << "ROOT!\n";
+				else
+					std::cout << ":(\n";
+
+				std::cin.get();
+				CS::Shell::Get().clear();
+			}
+
+		public:
+			static Engine& Get()
+			{
+				static Engine s_Instance{};
+				return s_Instance;
+			}
+		};
+	}
 }
