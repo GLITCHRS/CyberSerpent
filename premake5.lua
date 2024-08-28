@@ -40,11 +40,12 @@ project "CyberSerpent"
 		staticruntime "On"
 		systemversion "latest"
 
-		postbuildcommands
-		{
-			"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.dll ../bin/" .. outputdir .. "/%{prj.name}",
-			"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.lib ../bin/" .. outputdir .. "/%{prj.name}"
-		} 
+		-- unused code
+		--postbuildcommands
+		--{
+		--	"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.dll ../bin/" .. outputdir .. "/%{prj.name}",
+		--	"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.lib ../bin/" .. outputdir .. "/%{prj.name}"
+		--} 
 
 	filter "configurations:Debug"
 		defines "CS_DEBUG"
@@ -60,9 +61,8 @@ project "CyberSerpent"
 
 project "Shell"
 	location "Shell"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	defines {"DLLExport"}
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

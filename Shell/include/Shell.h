@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 #ifdef _WIN32
 #ifdef DLLExport
 #define DLL __declspec(dllexport)
@@ -9,6 +10,7 @@
 #else
 #define DLL __attribute__((visibility("default")))
 #endif
+*/
 
 #include <map>
 #include <string>
@@ -20,7 +22,7 @@ class exception_exit : std::exception {};
 
 namespace CS
 {
-	class DLL Shell
+	class Shell
 	{
 	public:
 		Shell();
