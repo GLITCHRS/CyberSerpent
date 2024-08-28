@@ -19,11 +19,13 @@ void CS::Shell::help()
 {
 #ifdef _WIN32
     FILE* pipe = _popen("cls", "w");
-#else
-    FILE* pipe = _popen("clear", "w");
-#endif
     if (pipe)
         _pclose(pipe);
+#else
+    FILE* pipe = popen("clear", "w");
+    if (pipe)
+        pclose(pipe);
+#endif
 }
 
  void CS::Shell::back()

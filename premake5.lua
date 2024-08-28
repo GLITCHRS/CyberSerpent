@@ -32,6 +32,9 @@ project "CyberSerpent"
 
 	links { "Shell" }
 
+	filter "system:linux"
+		cppdialect "gnu++20"
+
 	filter "system:windows"
 		cppdialect "C++20"
 		staticruntime "On"
@@ -74,6 +77,9 @@ project "Shell"
 	{
 		"%{prj.name}/include"
 	}
+
+	filter "system:linux"
+		cppdialect "gnu++20"
 
 	filter "system:windows"
 		cppdialect "C++20"
