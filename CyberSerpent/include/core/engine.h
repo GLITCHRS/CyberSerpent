@@ -26,6 +26,7 @@ namespace CS
 				std::string command;
 				while (true)
 				{
+					std::cout << CS::Shell::s_ShellPrefix;
 					std::cin >> command;
 
 					if (m_Shell.m_Commands.contains(command))
