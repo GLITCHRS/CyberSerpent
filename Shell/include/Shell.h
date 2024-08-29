@@ -12,9 +12,10 @@
 #endif
 */
 
+#include "system/System.h"
+
 #include <map>
 #include <string>
-#include <functional>
 
 
 class exception_exit : std::exception {};
@@ -48,6 +49,7 @@ namespace CS
 		}
 
 	public:
+		System& m_Sys{ System::Get() };
 		std::map<std::string, void(CS::Shell::*)()> m_Commands;
 
 	public:

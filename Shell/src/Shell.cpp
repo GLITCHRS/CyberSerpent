@@ -15,17 +15,9 @@ void CS::Shell::help()
 {
 }
 
- void CS::Shell::clear()
+void CS::Shell::clear()
 {
-#ifdef _WIN32
-    FILE* pipe = _popen("cls", "w");
-    if (pipe)
-        _pclose(pipe);
-#else
-    FILE* pipe = popen("clear", "w");
-    if (pipe)
-        pclose(pipe);
-#endif
+     m_Sys.clear();
 }
 
  void CS::Shell::back()
