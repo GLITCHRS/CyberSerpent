@@ -3,9 +3,8 @@
 
 #include <iostream>
 
-const char* CS::Shell::s_ShellPrefix{ "CyberSerpent>" };
-
 CS::Shell::Shell()
+    : m_ShellPrefix("CyberSerpent>")
 {
     m_Commands.emplace("exit", &CS::Shell::exit);
     m_Commands.emplace("clear", &CS::Shell::clear);

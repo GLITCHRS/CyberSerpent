@@ -53,6 +53,6 @@ namespace CS
 		std::map<std::string, void(CS::Shell::*)()> m_Commands;
 
 	public:
-		static const char* s_ShellPrefix;
+		const char* m_ShellPrefix;
 	};
 }
