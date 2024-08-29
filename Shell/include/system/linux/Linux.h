@@ -8,7 +8,7 @@
 class Linux : public System
 {
 public:
-	bool IsRoot()
+	bool IsRoot() const override
 	{
 		return getuid() == 0;
 	}

@@ -1,3 +1,5 @@
+#ifdef CS_WINDOWS
+
 #pragma once
 
 #include "pch/pch.h"
@@ -44,3 +46,5 @@ public:
 private:
 	Windows() = default;
 };
+
+#endif
