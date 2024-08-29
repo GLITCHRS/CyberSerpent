@@ -34,11 +34,14 @@ namespace CS
 		*  GENERAL COMMANDS
 		*
 		*/
+		// unoverrided methods
 		void Clear();
+
+		// possibly overrided methods
 		virtual void Help();
-		virtual void Back();
 		virtual void Exit();
 		virtual void Modules();
+		virtual void Back();
 
 		virtual bool IsRoot();
 
