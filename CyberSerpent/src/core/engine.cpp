@@ -1,22 +1,27 @@
 #include "core/engine.h"
 
-#include "utils/root_check.h"
 #include "Shell.h"
+
+#include <iostream>
 
 CS::Shell& CS::CORE::Engine::m_Shell{ CS::Shell::Get() };
 
 void CS::CORE::Engine::Run()
 {
-	if (CS::UTILS::IsRoot())
-		std::cout << "ROOT!\n";
-	else
-		std::cout << ":(\n";
+#ifdef CS_DIST
+	if (!m_Shell.IsRoot())
+	{
+		std::cout << "This tool requires being a root to use!\n";
+		std::cin.get();
+		return;
+	}
+#endif
 
 	std::string command;
 	while (true)
 	{
 		std::cout << m_Shell.m_ShellPrefix;
-		std::cin >> command;
+		std::getline(std::cin, command);
 
 		if (m_Shell.m_Commands.contains(command))
 		{

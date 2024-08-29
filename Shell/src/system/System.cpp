@@ -1,6 +1,6 @@
 #include "system/System.h"
 
-#ifdef _WIN32
+#ifdef CS_WINDOWS
 #include "system/windows/Windows.h"
 #else
 #include "system/linux/Linux.h"
@@ -8,10 +8,9 @@
 
 System& System::Get()
 {
-#ifdef _WIN32
-	static Windows sys{};
+#ifdef CS_WINDOWS
+	return Windows::Get();
 #else
-	static Linux sys{};
+	return Linux::Get();
 #endif
-	return sys;
 }

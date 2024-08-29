@@ -34,11 +34,12 @@ namespace CS
 		*  GENERAL COMMANDS
 		*
 		*/
-		void help();
-		void clear();
-		virtual void back();
-		virtual void exit();
-		virtual void modules();
+		void Help();
+		void Clear();
+		virtual bool IsRoot();
+		virtual void Back();
+		virtual void Exit();
+		virtual void Modules();
 
 	public:
 		static Shell& Get()

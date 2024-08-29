@@ -39,6 +39,7 @@ project "CyberSerpent"
 		cppdialect "C++20"
 		staticruntime "On"
 		systemversion "latest"
+		defines "CS_WINDOWS"
 
 		-- unused code
 		--postbuildcommands
@@ -85,6 +86,7 @@ project "Shell"
 		cppdialect "C++20"
 		staticruntime "On"
 		systemversion "latest"
+		defines "CS_WINDOWS"
 
 	filter "configurations:Debug"
 		defines "CS_DEBUG"
