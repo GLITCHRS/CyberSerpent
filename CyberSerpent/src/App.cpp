@@ -6,6 +6,5 @@
 
 int main()
 {
-	CS::CORE::Engine& engine{ CS::CORE::Engine::Get() };
-	engine.Run();
+	CS::CORE::Engine::Run();
 }
