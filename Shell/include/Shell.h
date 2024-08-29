@@ -26,7 +26,6 @@ namespace CS
 	class Shell
 	{
 	public:
-		Shell();
 		Shell(Shell&) = delete;
 
 	public:
@@ -47,6 +46,9 @@ namespace CS
 			static Shell instance{};
 			return instance;
 		}
+
+	private:
+		Shell();
 
 	public:
 		System& m_Sys{ System::Get() };
