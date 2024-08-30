@@ -1,3 +1,5 @@
+#ifndef CS_WINDOWS
+
 #pragma once
 
 #include "pch/pch.h"
@@ -30,3 +32,5 @@ public:
 private:
 	Linux() = default;
 };
+
+#endif
