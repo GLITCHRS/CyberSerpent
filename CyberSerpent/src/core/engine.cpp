@@ -22,21 +22,16 @@ void CS::CORE::Engine::Run()
 	{
 		std::cout << m_Shell.m_ShellPrefix;
 		std::getline(std::cin, command);
+		try
+		{
+			auto commandPtr{ m_Shell.GetCommand(command) };
 
-		if (m_Shell.m_Commands.contains(command))
-		{
-			try
-			{
-				(m_Shell.*m_Shell.m_Commands[command])();
-			}
-			catch (exception_exit&)
-			{
-				break;
-			}
+			if (commandPtr)
+				(m_Shell.*commandPtr)();
 		}
-		else
+		catch (exception_exit&)
 		{
-			std::cout << "Command (" << command << ") don't exist\n";
+			break;
 		}
 	}
 }

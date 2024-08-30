@@ -5,6 +5,16 @@
 #include "pch/pch.h"
 #include <Windows.h>
 
+std::string FileToString(FILE* file)
+{
+	std::string result;
+	char buffer[128];
+
+	while (fgets(buffer, sizeof(buffer), file) != nullptr)
+		result += buffer;
+
+	return result;
+}
 
 bool Windows::IsRoot() const
 {
@@ -25,17 +35,32 @@ bool Windows::IsRoot() const
 	return false;
 }
 
-void Windows::Clear() const
+std::string Windows::ExecCommands(const std::string& command) const
 {
-	FILE* pipe = _popen("cls", "w");
+	std::string commandResult{ "" };
+	Command sysCommand{ m_SysCommands.at(command) };
+	FILE* pipe = _popen(sysCommand.command.c_str(), sysCommand.mode.c_str());
+
+	if (sysCommand.mode == "w")
+	{
+		commandResult = FileToString(pipe);
+	}
+
 	if (pipe)
 		_pclose(pipe);
+
+	return commandResult;
 }
 
 Windows& Windows::Get()
 {
 	static Windows instance{};
 	return instance;
+}
+
+Windows::Windows()
+{
+	m_SysCommands.insert({ "clear", { "cls", "w" } });
 }
 
 #endif

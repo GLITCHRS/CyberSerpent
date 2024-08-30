@@ -26,6 +26,9 @@ namespace CS
 	class Shell
 	{
 	public:
+		using MemberFuncPtr = void(Shell::*)();
+
+	public:
 		Shell(Shell&) = delete;
 
 	public:
@@ -46,6 +49,12 @@ namespace CS
 		virtual bool IsRoot();
 
 	public:
+		MemberFuncPtr GetCommand(const std::string& command);
+
+	private:
+		inline bool IsValidCommand(const std::string&);
+
+	public:
 		static Shell& Get()
 		{
 			static Shell instance{};
@@ -57,7 +66,7 @@ namespace CS
 
 	public:
 		System& m_Sys{ System::Get() };
-		std::map<std::string, void(CS::Shell::*)()> m_Commands;
+		std::map<std::string, MemberFuncPtr> m_Commands;
 
 	public:
 		const char* m_ShellPrefix;

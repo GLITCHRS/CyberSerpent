@@ -27,7 +27,8 @@ modules: displays a list of available modules
 
 void CS::Shell::Clear()
 {
-     m_Sys.Clear();
+    std::cout << "clear from shell\n";
+    std::string commandResult{ m_Sys.ExecCommands("clear") };
 }
 
 bool CS::Shell::IsRoot()
@@ -45,3 +46,19 @@ void CS::Shell::Modules()
 }
 
 void CS::Shell::Back() {}
+
+CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
+{
+    if (!IsValidCommand(command))
+    {
+        std::cout << "Command don't exist\n";
+        return {};
+    }
+
+    return m_Commands.at(command);
+}
+
+inline bool CS::Shell::IsValidCommand(const std::string& command)
+{
+    return m_Commands.contains(command);
+}
