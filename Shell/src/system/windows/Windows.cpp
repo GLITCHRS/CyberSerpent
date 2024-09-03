@@ -5,7 +5,7 @@
 #include "pch/pch.h"
 #include <Windows.h>
 
-std::string FileToString(FILE* file)
+static std::string FileToString(FILE* file)
 {
 	std::string result;
 	char buffer[128];
@@ -14,6 +14,23 @@ std::string FileToString(FILE* file)
 		result += buffer;
 
 	return result;
+}
+
+std::string Windows::ExecCommands(const std::string& command) const
+{
+	std::string commandResult{ "" };
+	Command sysCommand{ m_SysCommands.at(command) };
+	FILE* pipe = _popen(sysCommand.command.c_str(), sysCommand.mode.c_str());
+
+	if (sysCommand.mode == "w")
+	{
+		commandResult = FileToString(pipe);
+	}
+
+	if (pipe)
+		_pclose(pipe);
+
+	return commandResult;
 }
 
 bool Windows::IsRoot() const
@@ -35,32 +52,15 @@ bool Windows::IsRoot() const
 	return false;
 }
 
-std::string Windows::ExecCommands(const std::string& command) const
+Windows::Windows()
 {
-	std::string commandResult{ "" };
-	Command sysCommand{ m_SysCommands.at(command) };
-	FILE* pipe = _popen(sysCommand.command.c_str(), sysCommand.mode.c_str());
-
-	if (sysCommand.mode == "w")
-	{
-		commandResult = FileToString(pipe);
-	}
-
-	if (pipe)
-		_pclose(pipe);
-
-	return commandResult;
+	m_SysCommands.insert({ "clear", { "cls", "w" } });
 }
 
 Windows& Windows::Get()
 {
 	static Windows instance{};
 	return instance;
-}
-
-Windows::Windows()
-{
-	m_SysCommands.insert({ "clear", { "cls", "w" } });
 }
 
 #endif
