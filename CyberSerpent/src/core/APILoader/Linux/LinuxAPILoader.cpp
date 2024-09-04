@@ -6,7 +6,8 @@
 
 bool LinuxAPILoader::load(const wchar_t* apiName)
 {
-    m_API = dlopen(apiName, RTLD_LAZY);
+    const char* charAPIName{ (const char*)apiName };
+    m_API = dlopen(charAPIName, RTLD_LAZY);
 
     if (!m_API)
     {

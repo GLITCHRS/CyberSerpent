@@ -27,42 +27,41 @@ function CommonConfig()
 			defines "CS_DEBUG"
 			symbols "On"
 
-		filter "configurations:Release"
-			defines "CS_RELEASE"
-			optimize "On"
+	filter "configurations:Release"
+		defines "CS_RELEASE"
+		optimize "On"
 
-		filter "configurations:Dist"
-			defines "CS_DIST"
-			optimize "On"
+	filter "configurations:Dist"
+		defines "CS_DIST"
+		optimize "On"
 
-		filter "system:linux"
-			cppdialect "gnu++20"
+	filter "system:linux"
+		cppdialect "gnu++20"
 
-		filter "system:windows"
-			cppdialect "C++20"
-			staticruntime "On"
-			systemversion "latest"
-			defines "CS_WINDOWS"
+	filter "system:windows"
+		defines "CS_WINDOWS"
+		cppdialect "C++20"
+		staticruntime "On"
+		systemversion "latest"
 end
 
 group "Core"
 	project "CyberSerpent"
-		CommonConfig()
+		links { "Shell" }
 		kind "ConsoleApp"
-		links "Shell"
 
 		includedirs
 		{
 			"%{prj.name}/include",
 			"Shell/include"
 		}
+		CommonConfig()
 
 group "Shell"
 	project "Shell"
-		CommonConfig()
 		kind "SharedLib"
 		defines "DLLExport"
-		links "Log"
+		links { "Log" }
 
 		includedirs
 		{
@@ -70,6 +69,8 @@ group "Shell"
 			"Log/include",
 			"vendor/spdlog/include"
 		}
+
+		CommonConfig()
 
 		filter "system:windows"
 			postbuildcommands
@@ -82,12 +83,10 @@ group "Shell"
 			postbuildcommands
 			{
 				"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
-				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so"
+				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/lib%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so"
 			}
 
 	project "Log"
-		CommonConfig()
-		location "Log"
 		kind "StaticLib"
 		language "C++"
 
@@ -99,4 +98,5 @@ group "Shell"
 			"%{prj.name}/include",
 			"vendor/spdlog/include"
 		}
+		CommonConfig()
 		

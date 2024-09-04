@@ -1,3 +1,5 @@
+#ifdef CS_WINDOWS
+
 #pragma once
 
 #include "core/APILoader/APILoader.h"
@@ -23,3 +25,5 @@ private:
 	HMODULE m_API;
 	CreateShellFuncPtr m_CreateShellFunc;
 };
+
+#endif
