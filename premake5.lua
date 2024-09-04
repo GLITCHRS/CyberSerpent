@@ -83,7 +83,9 @@ group "Shell"
 			postbuildcommands
 			{
 				"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
-				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/lib%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so"
+				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/lib%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so",
+				"export LD_LIBRARY_PATH=../bin/" .. outputdir .. "/CyberSerpent:$LD_LIBRARY_PATH",
+        		"sudo ldconfig"
 			}
 
 	project "Log"

@@ -10,7 +10,7 @@ typedef CS::Shell* (*CreateShellFuncPtr)();
 class WinAPILoader : public APILoader
 {
 public:
-	bool load(const wchar_t*) override;
+	bool load(const C_STR) override;
 	void unload() override;
 	CS::Shell* CreateShell() override;
 

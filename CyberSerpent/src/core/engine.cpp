@@ -7,7 +7,7 @@
 #ifdef CS_WINDOWS
 #define API_NAME L"Shell.dll"
 #else
-#define API_NAME L"./Shell.so"
+#define API_NAME "Shell.so"
 #endif
 
 #ifdef CS_DIST

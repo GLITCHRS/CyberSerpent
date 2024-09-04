@@ -4,7 +4,7 @@
 #include "pch/PCH.h"
 #include <dlfcn.h>
 
-bool LinuxAPILoader::load(const wchar_t* apiName)
+bool LinuxAPILoader::load(const C_STR apiName)
 {
     const char* charAPIName{ (const char*)apiName };
     m_API = dlopen(charAPIName, RTLD_LAZY);
