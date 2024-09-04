@@ -1,15 +1,12 @@
-#include "pch/pch.h"
 #include "Shell.h"
+
+#include "pch/pch.h"
+#include "Log/Log.h"
 #include "system/windows/Windows.h"
 
-#include "Log/Log.h"
-
-CS::Shell::Shell()
-    : m_ShellPrefix("CyberSerpent>")
+void CS::Shell::Clear()
 {
-    m_Commands.emplace("help", &CS::Shell::Help);
-    m_Commands.emplace("exit", &CS::Shell::Exit);
-    m_Commands.emplace("clear", &CS::Shell::Clear);
+    std::string commandResult{ m_Sys.ExecCommands("clear") };
 }
 
 void CS::Shell::Help()
@@ -28,26 +25,18 @@ modules: displays a list of available modules
 )###";
 }
 
-void CS::Shell::Clear()
-{
-    std::string commandResult{ m_Sys.ExecCommands("clear") };
-}
-
-bool CS::Shell::IsRoot()
-{
-    return m_Sys.IsRoot();
-}
-
 void CS::Shell::Exit()
 {
     throw exception_exit{};
 }
 
-void CS::Shell::Modules()
-{
-}
-
+void CS::Shell::Modules() {}
 void CS::Shell::Back() {}
+
+bool CS::Shell::IsRoot()
+{
+    return m_Sys.IsRoot();
+}
 
 CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
 {
@@ -63,6 +52,20 @@ CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
 inline bool CS::Shell::IsValidCommand(const std::string& command)
 {
     return m_Commands.contains(command);
+}
+
+CS::Shell::Shell()
+    : m_ShellPrefix("CyberSerpent>")
+{
+    m_Commands.emplace("help", &CS::Shell::Help);
+    m_Commands.emplace("exit", &CS::Shell::Exit);
+    m_Commands.emplace("clear", &CS::Shell::Clear);
+}
+
+CS::Shell& CS::Shell::Get()
+{
+    static Shell instance{};
+    return instance;
 }
 
 extern "C" CyberSerpent_API CS::Shell* createShell()

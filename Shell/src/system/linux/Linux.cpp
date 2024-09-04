@@ -3,6 +3,7 @@
 #include "system/linux/Linux.h"
 
 #include "pch/pch.h"
+#include "system/Command.h"
 #include <unistd.h>
 
 static std::string FileToString(FILE* file)

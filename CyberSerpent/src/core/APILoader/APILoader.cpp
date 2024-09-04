@@ -1,5 +1,4 @@
 #include "core/APILoader/APILoader.h"
-
 #include "core/APILoader/Windows/WinAPILoader.h"
 
 APILoader& APILoader::Get()
@@ -8,8 +7,4 @@ APILoader& APILoader::Get()
 	return WinAPILoader::Get();
 #else
 #endif
-}
-
-APILoader::~APILoader()
-{
 }

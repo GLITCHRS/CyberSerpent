@@ -1,10 +1,10 @@
 #pragma once
 
 #include "system/System.h"
-#include "system/Command.h"
-
 #include <map>
-#include <string>
+
+// forward decls
+struct Command;
 
 class Linux : public System
 {

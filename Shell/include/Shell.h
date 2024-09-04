@@ -36,7 +36,7 @@ namespace CS
 	public:
 		/*
 		*
-		*  GENERAL COMMANDS
+		*  GENERAL COMMANDS (ACCESSABLE BY USER)
 		*
 		*/
 		// unoverrided methods
@@ -48,23 +48,25 @@ namespace CS
 		virtual void Modules();
 		virtual void Back();
 
+	public:
+		/*
+		*
+		*  GENERAL COMMANDS (UNACCESSABLE BY USER)
+		*
+		*/
 		virtual bool IsRoot();
 
 	public:
-		MemberFuncPtr GetCommand(const std::string& command);
+		MemberFuncPtr GetCommand(const std::string&);
 
 	private:
 		inline bool IsValidCommand(const std::string&);
 
-	public:
-		static Shell& Get()
-		{
-			static Shell instance{};
-			return instance;
-		}
-
 	private:
 		Shell();
+
+	public:
+		static Shell& Get();
 
 	private:
 		System& m_Sys{ System::Get() };

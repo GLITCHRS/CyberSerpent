@@ -20,6 +20,10 @@ namespace CS
 
 		private:
 			Engine();
+			~Engine();
+
+		public:
+			Engine(Engine&) = delete;
 
 		public:
 			static Engine& Get();

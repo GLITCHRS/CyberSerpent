@@ -1,8 +1,4 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-
-#include "core/engine.h"
+#include "core/Engine.h"
 
 int main()
 {

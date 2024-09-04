@@ -1,9 +1,7 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
 #include "spdlog/spdlog.h"
+#include <memory>
 
 // Log Macros
 #if defined(CS_DEBUG) || defined(CS_RELEASE)
@@ -19,13 +17,6 @@
 #define  CS_ERROR(...)
 #define  CS_FATAL(...)
 #endif
-
-
-namespace spdlog
-{
-	// forward decls
-	class logger;
-}
 
 namespace CS
 {

@@ -3,6 +3,7 @@
 #include "system/windows/Windows.h"
 
 #include "pch/pch.h"
+#include "system/Command.h"
 #include <Windows.h>
 
 static std::string FileToString(FILE* file)

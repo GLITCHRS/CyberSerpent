@@ -2,6 +2,7 @@
 
 #include <string>
 
+// forward decls
 class Windows;
 class Linux;
 

@@ -1,12 +1,9 @@
 #pragma once
 
 #include "core/APILoader/APILoader.h"
-#include "Shell.h"
-
 #include <Windows.h>
 
-typedef CS::Shell* (*CreateShellFunc)();
-//typedef CS::Shell::MemberFuncPtr(*GetCommandFunc)();
+typedef CS::Shell* (*CreateShellFuncPtr)();
 
 class WinAPILoader : public APILoader
 {
@@ -24,5 +21,5 @@ public:
 private:
 	const char* m_APIName;
 	HMODULE m_API;
-	CreateShellFunc m_CreateShell;
+	CreateShellFuncPtr m_CreateShellFunc;
 };

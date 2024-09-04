@@ -1,8 +1,7 @@
 #ifdef CS_WINDOWS
 
-#include <iostream>
 #include "core/APILoader/Windows/WinAPILoader.h"
-
+#include "pch/PCH.h"
 
 bool WinAPILoader::load(const wchar_t* apiName)
 {
@@ -15,9 +14,9 @@ bool WinAPILoader::load(const wchar_t* apiName)
         return false;
     }
 
-    m_CreateShell = (CreateShellFunc)GetProcAddress(m_API, "createShell");
+    m_CreateShellFunc = (CreateShellFuncPtr)GetProcAddress(m_API, "createShell");
 
-    if (!m_CreateShell)
+    if (!m_CreateShellFunc)
     {
         std::cerr << "Failed to get function address (createShell)\n";
         std::cerr << GetLastError() << '\n';
@@ -33,14 +32,14 @@ void WinAPILoader::unload()
     {
         FreeLibrary(m_API);
         m_API = nullptr;
-        m_CreateShell = nullptr;
+        m_CreateShellFunc = nullptr;
     }
 }
 
 CS::Shell* WinAPILoader::CreateShell()
 {
-    if (m_CreateShell)
-        return m_CreateShell();
+    if (m_CreateShellFunc)
+        return m_CreateShellFunc();
 
     return nullptr;
 }

@@ -15,7 +15,4 @@ public:
 
 public:
 	static APILoader& Get();
-
-public:
-	virtual ~APILoader();
 };
