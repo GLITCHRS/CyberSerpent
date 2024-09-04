@@ -49,6 +49,7 @@ group "Core"
 	project "CyberSerpent"
 		CommonConfig()
 		kind "ConsoleApp"
+		links "Shell"
 
 		includedirs
 		{
@@ -56,13 +57,12 @@ group "Core"
 			"Shell/include"
 		}
 
-		links { "Shell" }
-
 group "Shell"
 	project "Shell"
 		CommonConfig()
 		kind "SharedLib"
 		defines "DLLExport"
+		links "Log"
 
 		includedirs
 		{
@@ -71,13 +71,19 @@ group "Shell"
 			"vendor/spdlog/include"
 		}
 
-		postbuildcommands
-		{
-			"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
-			"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/%{prj.name}.dll ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.dll"
-		}
+		filter "system:windows"
+			postbuildcommands
+			{
+				"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
+				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/%{prj.name}.dll ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.dll"
+			}
 
-		links { "Log" }
+		filter "system:linux"
+			postbuildcommands
+			{
+				"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
+				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so"
+			}
 
 	project "Log"
 		CommonConfig()
