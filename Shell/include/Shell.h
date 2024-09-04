@@ -1,16 +1,18 @@
 #pragma once
 
-/*
-#ifdef _WIN32
+#ifdef CS_WINDOWS
 #ifdef DLLExport
-#define DLL __declspec(dllexport)
+#define CyberSerpent_API __declspec(dllexport)
 #else
-#define DLL __declspec(dllimport)
+#define CyberSerpent_API __declspec(dllimport)
 #endif
 #else
-#define DLL __attribute__((visibility("default")))
+#ifdef DLLExport
+#define CyberSerpent_API __attribute__((visibility("default")))
+#else
+#define CyberSerpent_API
 #endif
-*/
+#endif
 
 #include "system/System.h"
 
@@ -23,7 +25,7 @@ class exception_exit : std::exception {};
 
 namespace CS
 {
-	class Shell
+	class CyberSerpent_API Shell
 	{
 	public:
 		using MemberFuncPtr = void(Shell::*)();
@@ -64,7 +66,7 @@ namespace CS
 	private:
 		Shell();
 
-	public:
+	private:
 		System& m_Sys{ System::Get() };
 		std::map<std::string, MemberFuncPtr> m_Commands;
 
@@ -72,3 +74,5 @@ namespace CS
 		const char* m_ShellPrefix;
 	};
 }
+
+extern "C" CyberSerpent_API CS::Shell* createShell();

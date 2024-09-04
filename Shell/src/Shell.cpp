@@ -1,7 +1,8 @@
 #include "pch/pch.h"
 #include "Shell.h"
-
 #include "system/windows/Windows.h"
+
+#include "Log/Log.h"
 
 CS::Shell::Shell()
     : m_ShellPrefix("CyberSerpent>")
@@ -13,6 +14,8 @@ CS::Shell::Shell()
 
 void CS::Shell::Help()
 {
+    CS_WARN("Printing The Help Message..., a={0}");
+
     std::cout <<
 R"###(
 ==================================================
@@ -27,7 +30,6 @@ modules: displays a list of available modules
 
 void CS::Shell::Clear()
 {
-    std::cout << "clear from shell\n";
     std::string commandResult{ m_Sys.ExecCommands("clear") };
 }
 
@@ -51,7 +53,7 @@ CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
 {
     if (!IsValidCommand(command))
     {
-        std::cout << "Command don't exist\n";
+        // CS::Log::warn("Command Don't Exist");
         return {};
     }
 
@@ -61,4 +63,9 @@ CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
 inline bool CS::Shell::IsValidCommand(const std::string& command)
 {
     return m_Commands.contains(command);
+}
+
+extern "C" CyberSerpent_API CS::Shell* createShell()
+{
+    return &CS::Shell::Get();
 }

@@ -10,9 +10,8 @@ workspace "CyberSerpent_WS"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
-project "CyberSerpent"
-	location "CyberSerpent"
-	kind "ConsoleApp"
+function CommonConfig()
+	location "%{prj.name}"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -24,78 +23,74 @@ project "CyberSerpent"
 		"%{prj.name}/include/**.h"
 	}
 
-	includedirs
-	{
-		"%{prj.name}/include",
-		"Shell/include"
-	}
-
-	links { "Shell" }
-
-	filter "system:linux"
-		cppdialect "gnu++20"
-
-	filter "system:windows"
-		cppdialect "C++20"
-		staticruntime "On"
-		systemversion "latest"
-		defines "CS_WINDOWS"
-
-		-- unused code
-		--postbuildcommands
-		--{
-		--	"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.dll ../bin/" .. outputdir .. "/%{prj.name}",
-		--	"{COPYFILE} ../bin/" .. outputdir .. "/Shell/*.lib ../bin/" .. outputdir .. "/%{prj.name}"
-		--} 
-
 	filter "configurations:Debug"
-		defines "CS_DEBUG"
-		symbols "On"
+			defines "CS_DEBUG"
+			symbols "On"
 
-	filter "configurations:Release"
-		defines "CS_RELEASE"
-		optimize "On"
+		filter "configurations:Release"
+			defines "CS_RELEASE"
+			optimize "On"
 
-	filter "configurations:Dist"
-		defines "CS_DIST"
-		optimize "On"
+		filter "configurations:Dist"
+			defines "CS_DIST"
+			optimize "On"
 
-project "Shell"
-	location "Shell"
-	kind "StaticLib"
-	language "C++"
+		filter "system:linux"
+			cppdialect "gnu++20"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+		filter "system:windows"
+			cppdialect "C++20"
+			staticruntime "On"
+			systemversion "latest"
+			defines "CS_WINDOWS"
+end
 
-	files
-	{
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/include/**.h"
-	}
+group "Core"
+	project "CyberSerpent"
+		CommonConfig()
+		kind "ConsoleApp"
 
-	includedirs
-	{
-		"%{prj.name}/include"
-	}
+		includedirs
+		{
+			"%{prj.name}/include",
+			"Shell/include"
+		}
 
-	filter "system:linux"
-		cppdialect "gnu++20"
+		links { "Shell" }
 
-	filter "system:windows"
-		cppdialect "C++20"
-		staticruntime "On"
-		systemversion "latest"
-		defines "CS_WINDOWS"
+group "Shell"
+	project "Shell"
+		CommonConfig()
+		kind "SharedLib"
+		defines "DLLExport"
 
-	filter "configurations:Debug"
-		defines "CS_DEBUG"
-		symbols "On"
+		includedirs
+		{
+			"%{prj.name}/include",
+			"Log/include",
+			"vendor/spdlog/include"
+		}
 
-	filter "configurations:Release"
-		defines "CS_RELEASE"
-		optimize "On"
+		postbuildcommands
+		{
+			"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
+			"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/%{prj.name}.dll ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.dll"
+		}
 
-	filter "configurations:Dist"
-		defines "CS_DIST"
-		optimize "On"
+		links { "Log" }
+
+	project "Log"
+		CommonConfig()
+		location "Log"
+		kind "StaticLib"
+		language "C++"
+
+		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+		includedirs
+		{
+			"%{prj.name}/include",
+			"vendor/spdlog/include"
+		}
+		

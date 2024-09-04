@@ -6,6 +6,9 @@ namespace CS
 	class Shell;
 }
 
+// forward decls
+class APILoader;
+
 namespace CS
 {
 	namespace CORE
@@ -13,13 +16,17 @@ namespace CS
 		class Engine
 		{
 		public:
-			Engine() = delete;
+			void Run();
+
+		private:
+			Engine();
 
 		public:
-			static void Run();
+			static Engine& Get();
 
-		public :
-			static CS::Shell& m_Shell;
+		private:
+			APILoader& m_APILoader;
+			CS::Shell* m_Shell;
 		};
 	}
 }
