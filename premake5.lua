@@ -59,19 +59,16 @@ group "Core"
 
 group "Shell"
 	project "Shell"
-		kind "SharedLib"
-		defines "DLLExport"
-		links { "Log" }
+		kind "StaticLib"
 
 		includedirs
 		{
 			"%{prj.name}/include",
-			"Log/include",
 			"vendor/spdlog/include"
 		}
 
 		CommonConfig()
-
+--[[
 		filter "system:windows"
 			postbuildcommands
 			{
@@ -85,18 +82,4 @@ group "Shell"
 				"{MKDIR} ../bin/" .. outputdir .. "/CyberSerpent",
 				"{COPYFILE} ../bin/" .. outputdir .. "/%{prj.name}/lib%{prj.name}.so ../bin/" .. outputdir .. "/CyberSerpent/%{prj.name}.so"
 			}
-
-	project "Log"
-		kind "StaticLib"
-		language "C++"
-
-		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-		includedirs
-		{
-			"%{prj.name}/include",
-			"vendor/spdlog/include"
-		}
-		CommonConfig()
-		
+]]--

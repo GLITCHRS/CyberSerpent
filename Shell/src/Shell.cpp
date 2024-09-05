@@ -69,8 +69,3 @@ CS::Shell& CS::Shell::Get()
     static Shell instance{};
     return instance;
 }
-
-extern "C" CyberSerpent_API CS::Shell* createShell()
-{
-    return &CS::Shell::Get();
-}

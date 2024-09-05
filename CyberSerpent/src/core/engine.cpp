@@ -2,13 +2,6 @@
 
 #include "Shell.h"
 #include "pch/PCH.h"
-#include "core/APILoader/APILoader.h"
-
-#ifdef CS_WINDOWS
-#define API_NAME L"Shell.dll"
-#else
-#define API_NAME "Shell.so"
-#endif
 
 #ifdef CS_DIST
 #define ISROOT m_Shell->IsRoot()
@@ -21,12 +14,6 @@ void CS::CORE::Engine::Run()
 	if (!ISROOT)
 	{
 		std::cout << "This tool requires being a root to use!\n";
-		return;
-	}
-
-	if (!m_Shell)
-	{
-		std::cerr << "m_Shell is nullptr, failed to create shell\n";
 		return;
 	}
 
@@ -50,18 +37,7 @@ void CS::CORE::Engine::Run()
 }
 
 CS::CORE::Engine::Engine()
-	: m_APILoader(APILoader::Get()), m_Shell(nullptr)
-{
-	if (!m_APILoader.load(API_NAME))
-		return;
-
-	m_Shell = m_APILoader.CreateShell();
-}
-
-CS::CORE::Engine::~Engine()
-{
-	m_APILoader.unload();
-}
+	: m_Shell(&CS::Shell::Get()) {}
 
 CS::CORE::Engine& CS::CORE::Engine::Get()
 {

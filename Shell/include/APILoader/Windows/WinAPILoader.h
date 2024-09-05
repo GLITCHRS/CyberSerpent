@@ -1,10 +1,13 @@
+#ifdef CS_WINDOWS
+
 #pragma once
 
-#include "core/APILoader/APILoader.h"
+#include "APILoader/APILoader.h"
+#include <Windows.h>
 
 typedef CS::Shell* (*CreateShellFuncPtr)();
 
-class LinuxAPILoader : public APILoader
+class WinAPILoader : public APILoader
 {
 public:
 	bool load(const C_STR) override;
@@ -12,13 +15,15 @@ public:
 	CS::Shell* CreateShell() override;
 
 private:
-	LinuxAPILoader() = default;
+	WinAPILoader() = default;
 
 public:
-	static LinuxAPILoader& Get();
+	static WinAPILoader& Get();
 
 private:
-	void* m_API;
 	const char* m_APIName;
+	HMODULE m_API;
 	CreateShellFuncPtr m_CreateShellFunc;
 };
+
+#endif
