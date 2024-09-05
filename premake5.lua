@@ -53,7 +53,8 @@ group "Core"
 		includedirs
 		{
 			"%{prj.name}/include",
-			"Shell/include"
+			"Shell/include",
+			"vendor/spdlog/include"
 		}
 		CommonConfig()
 

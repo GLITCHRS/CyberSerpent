@@ -1,7 +1,6 @@
 #include "Shell.h"
 
 #include "pch/pch.h"
-#include "Log/Log.h"
 #include "system/windows/Windows.h"
 
 void CS::Shell::Clear()

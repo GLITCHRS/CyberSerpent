@@ -13,7 +13,7 @@ void CS::CORE::Engine::Run()
 {
 	if (!ISROOT)
 	{
-		std::cout << "This tool requires being a root to use!\n";
+		CS_CRITICAL("This tool requires being a root to use!\n");
 		return;
 	}
 

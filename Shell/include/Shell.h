@@ -1,5 +1,6 @@
 #pragma once
 
+#include "log/Log.h"
 #include "system/System.h"
 
 #include <map>
