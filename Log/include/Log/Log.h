@@ -5,11 +5,11 @@
 
 // Log Macros
 #if defined(CS_DEBUG) || defined(CS_RELEASE)
-#define  CS_TRACE(...) CS::Log::Get().GetLogger()->trace(__VA_ARGS__)
-#define  CS_INFO(...)  CS::Log::Get().GetLogger()->info(__VA_ARGS__)
-#define  CS_WARN(...)  CS::Log::Get().GetLogger()->warn(__VA_ARGS__)
-#define  CS_ERROR(...) CS::Log::Get().GetLogger()->error(__VA_ARGS__)
-#define  CS_FATAL(...) CS::Log::Get().GetLogger()->fatal(__VA_ARGS__)
+#define  CS_TRACE(...) CS::Log::GetLogger()->trace(__VA_ARGS__)
+#define  CS_INFO(...)  CS::Log::GetLogger()->info(__VA_ARGS__)
+#define  CS_WARN(...)  CS::Log::GetLogger()->warn(__VA_ARGS__)
+#define  CS_ERROR(...) CS::Log::GetLogger()->error(__VA_ARGS__)
+#define  CS_FATAL(...) CS::Log::GetLogger()->fatal(__VA_ARGS__)
 #else
 #define  CS_TRACE(...)
 #define  CS_INFO(...) 
@@ -23,18 +23,13 @@ namespace CS
 	class Log
 	{
 	public:
-		std::shared_ptr<spdlog::logger>& GetLogger();
-
-	private:
-		Log();
+		Log() = delete;
 
 	public:
-		Log(Log&) = delete;
-
-	public:
-		static Log& Get();
+		static void Init();
+		static std::shared_ptr<spdlog::logger>& GetLogger();
 
 	private:
-		std::shared_ptr<spdlog::logger> m_Logger;
+		static inline std::shared_ptr<spdlog::logger> m_Logger{};
 	};
 }
