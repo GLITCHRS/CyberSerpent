@@ -14,6 +14,11 @@ public:
 public:
 	bool IsRoot() const override;
 
+public:
+	bool load(const CS_C_STR);
+	void unload();
+	CS::Shell* CreateShell();
+
 private:
 	Linux();
 

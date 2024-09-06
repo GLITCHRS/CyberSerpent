@@ -4,7 +4,6 @@
 
 #include "pch/pch.h"
 #include "system/Command.h"
-#include <Windows.h>
 
 static std::string FileToString(FILE* file)
 {
@@ -51,6 +50,47 @@ bool Windows::IsRoot() const
 		FreeSid(administratorsGroup);
 	}
 	return false;
+}
+
+bool Windows::load(const CS_C_STR apiName)
+{
+	m_API = LoadLibraryW(apiName);
+
+	if (!m_API)
+	{
+		std::cerr << "Failed to load API\n";
+		std::cerr << GetLastError() << '\n';
+		return false;
+	}
+
+	m_CreateShellFunc = (CreateShellFuncPtr)GetProcAddress(m_API, "createShell");
+
+	if (!m_CreateShellFunc)
+	{
+		std::cerr << "Failed to get function address (createShell)\n";
+		std::cerr << GetLastError() << '\n';
+		return false;
+	}
+
+	return true;
+}
+
+void Windows::unload()
+{
+	if (m_API)
+	{
+		FreeLibrary(m_API);
+		m_API = nullptr;
+		m_CreateShellFunc = nullptr;
+	}
+}
+
+CS::Shell* Windows::CreateShell()
+{
+	if (m_CreateShellFunc)
+		return m_CreateShellFunc();
+
+	return nullptr;
 }
 
 Windows::Windows()

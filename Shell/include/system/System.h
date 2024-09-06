@@ -2,9 +2,25 @@
 
 #include <string>
 
+#ifdef CS_WINDOWS
+#include <Windows.h>
+#define CS_C_STR wchar_t*
+#define API_TYPE HMODULE
+#else
+#define CS_C_STR char*
+#define API_TYPE void*
+#endif
+
 // forward decls
 class Windows;
 class Linux;
+namespace CS
+{
+	class Shell;
+}
+
+// typedefs
+typedef CS::Shell* (*CreateShellFuncPtr)();
 
 class System
 {
@@ -25,4 +41,9 @@ private:
 	System() = default;
 	friend class Windows;
 	friend class Linux;
+
+private:
+	API_TYPE m_API;
+	const char* m_APIName;
+	CreateShellFuncPtr m_CreateShellFunc;
 };

@@ -5,6 +5,7 @@
 #include "pch/pch.h"
 #include "system/Command.h"
 #include <unistd.h>
+#include <dlfcn.h>
 
 static std::string FileToString(FILE* file)
 {
@@ -37,6 +38,48 @@ std::string Linux::ExecCommands(const std::string& command) const
 bool Linux::IsRoot() const
 {
 	return getuid() == 0;
+}
+
+bool Linux::load(const CS_C_STR apiName)
+{
+	const char* charAPIName{ (const char*)apiName };
+	m_API = dlopen(charAPIName, RTLD_LAZY);
+
+	if (!m_API)
+	{
+		std::cerr << "Failed to load API\n";
+		std::cerr << dlerror() << '\n';
+		return false;
+	}
+
+	m_CreateShellFunc = (CreateShellFuncPtr)dlsym(m_API, "createShell");
+
+	if (!m_CreateShellFunc)
+	{
+		std::cerr << "Failed to get function address (createShell)\n";
+		std::cerr << dlerror() << '\n';
+		return false;
+	}
+
+	return true;
+}
+
+void Linux::unload()
+{
+	if (m_API)
+	{
+		dlclose(m_API);
+		m_API = nullptr;
+		m_CreateShellFunc = nullptr;
+	}
+}
+
+CS::Shell* Linux::CreateShell()
+{
+	if (m_CreateShellFunc)
+		return m_CreateShellFunc();
+
+	return nullptr;
 }
 
 Linux::Linux()
