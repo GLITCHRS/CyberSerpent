@@ -10,8 +10,6 @@ void CS::Shell::Clear()
 
 void CS::Shell::Help()
 {
-    CS_TRACE("Printing The Help Message...");
-
     std::cout <<
 R"###(
 ==================================================
@@ -56,8 +54,6 @@ inline bool CS::Shell::IsValidCommand(const std::string& command)
 CS::Shell::Shell()
     : m_ShellPrefix("CyberSerpent>")
 {
-    CS::Log::Init();
-
     m_Commands.emplace("help", &CS::Shell::Help);
     m_Commands.emplace("exit", &CS::Shell::Exit);
     m_Commands.emplace("clear", &CS::Shell::Clear);

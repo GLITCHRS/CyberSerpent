@@ -13,7 +13,7 @@ void CS::CORE::Engine::Run()
 {
 	if (!ISROOT)
 	{
-		CS_CRITICAL("This tool requires being a root to use!\n");
+		CS_CORE_CRITICAL("This tool requires being a root to use!\n");
 		return;
 	}
 
@@ -37,7 +37,10 @@ void CS::CORE::Engine::Run()
 }
 
 CS::CORE::Engine::Engine()
-	: m_Shell(&CS::Shell::Get()) {}
+	: m_Shell(&CS::Shell::Get())
+{
+	CS::Log::Init();
+}
 
 CS::CORE::Engine& CS::CORE::Engine::Get()
 {
