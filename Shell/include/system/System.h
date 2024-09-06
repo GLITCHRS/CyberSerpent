@@ -27,12 +27,15 @@ class System
 public:
 	virtual bool IsRoot() const = 0;
 	virtual std::string ExecCommands(const std::string&) const = 0;
-
-public:
-	System(System&) = delete;
+	virtual bool load(const CS_C_STR) = 0;
+	virtual void unload() = 0;
+	virtual CS::Shell* CreateShell() = 0;
 
 public:
 	virtual ~System() = default;
+
+public:
+	System(System&) = delete;
 
 public:
 	static System& Get();

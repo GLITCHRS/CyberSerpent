@@ -13,11 +13,9 @@ public:
 
 public:
 	bool IsRoot() const override;
-
-public:
-	bool load(const CS_C_STR);
-	void unload();
-	CS::Shell* CreateShell();
+	bool load(const CS_C_STR) override;
+	void unload() override;
+	CS::Shell* CreateShell() override;
 
 private:
 	Windows();
