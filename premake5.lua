@@ -69,6 +69,18 @@ group "Shell"
 		}
 
 		CommonConfig()
+
+group "Modules"
+	project "NetScanner"
+		kind "SharedLib"
+
+		includedirs
+		{
+			"%{prj.name}/include",
+			"vendor/spdlog/include"
+		}
+
+		CommonConfig()
 --[[
 		filter "system:windows"
 			postbuildcommands
