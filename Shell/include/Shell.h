@@ -16,6 +16,7 @@ namespace CS
 	{
 	public:
 		using MemberFuncPtr = void(Shell::*)();
+		using ModuleFuncPtr = void(Shell::*)(const std::optional<std::vector<std::string>>&);
 
 	public:
 		Shell(Shell&) = delete;
@@ -45,6 +46,7 @@ namespace CS
 
 	public:
 		MemberFuncPtr GetCommand(const std::string&);
+		ModuleFuncPtr GetModuleCommand(const std::string&);
 
 	private:
 		inline bool IsValidCommand(const std::string&);

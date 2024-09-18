@@ -9,6 +9,49 @@
 #define ISROOT true
 #endif
 
+std::vector<std::string> GetFlags(const std::string& str)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+
+	for (char c : str)
+	{
+		if (c != ' ')
+		{
+			token += c;
+			continue;
+		}
+
+		if (!token.empty())
+		{
+			tokens.push_back(token);
+			token.clear();
+		}
+	}
+
+	if (!token.empty())
+		tokens.push_back(token);
+
+	return tokens;
+}
+
+std::pair<std::string, std::vector<std::string>> SeparateCommandAndFlags(std::string text)
+{
+	std::string command{};
+	std::vector<std::string> flags{ GetFlags(text) };
+	if (flags.empty())
+		return { text , std::vector<std::string>{} };
+
+	command = flags[0];
+	flags.erase(flags.begin());
+
+	CS_CORE_WARN("Command: {}", command);
+	for(auto flag : flags)
+		CS_CORE_WARN("Flag: {}", flag);
+
+	return { command, flags };
+}
+
 void CS::CORE::Engine::Run()
 {
 	if (!ISROOT)
@@ -17,17 +60,31 @@ void CS::CORE::Engine::Run()
 		return;
 	}
 
-	std::string command;
+	std::string input;
+
 	while (true)
 	{
 		std::cout << m_Shell->m_ShellPrefix;
-		std::getline(std::cin, command);
+
+		std::getline(std::cin, input);
+		std::pair<std::string, std::vector<std::string>> Command{ SeparateCommandAndFlags(input) };
+
 		try
 		{
-			CS::Shell::MemberFuncPtr commandPtr{ m_Shell->GetCommand(command) };
+			CS::Shell::MemberFuncPtr commandPtr{ m_Shell->GetCommand(Command.first) };
 
 			if (commandPtr)
+			{
 				(m_Shell->*commandPtr)();
+				continue;
+			}
+
+			CS::Shell::ModuleFuncPtr moduleCommandPtr{ m_Shell->GetModuleCommand(Command.first) };
+
+			if (!moduleCommandPtr)
+				continue;
+
+			(m_Shell->*moduleCommandPtr)(Command.second);
 		}
 		catch (exception_exit&)
 		{

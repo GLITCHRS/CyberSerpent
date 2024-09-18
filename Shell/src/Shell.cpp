@@ -14,9 +14,12 @@ void CS::Shell::Help()
 R"###(
 ==================================================
 help: displays this message
-clear: clears the console
-exit: exits the tool
+==================================================
 modules: displays a list of available modules
+==================================================
+clear: clears the console
+==================================================
+exit: exits the tool
 ==================================================
 
 )###";
@@ -44,6 +47,11 @@ CS::Shell::MemberFuncPtr CS::Shell::GetCommand(const std::string& command)
     }
 
     return m_Commands.at(command);
+}
+
+CS::Shell::ModuleFuncPtr CS::Shell::GetModuleCommand(const std::string&)
+{
+    return ModuleFuncPtr();
 }
 
 inline bool CS::Shell::IsValidCommand(const std::string& command)
